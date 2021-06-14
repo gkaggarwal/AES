@@ -33,12 +33,18 @@ BEGIN
 				VARIABLE temp3,temp2,temp1,temp0 : std_logic_vector(31 downto 0);
 		BEGIN
 		       if clk'event AND clk='1' then
-						
+			       CASE encryption_round IS
+			            WHEN "0001" =>		
 					temp0 := encry_key_in(31 downto 0) XOR sig0;
 					temp1 := encry_key_in(63 downto 32) XOR temp0;
-			        temp2 := encry_key_in(95 downto 64) XOR temp1;
+			               temp2 := encry_key_in(95 downto 64) XOR temp1;
 					temp3 := encry_key_in(127 downto 96) XOR temp2;
-						
+			            WHEN OTHERS=>
+			               temp0 := round_key(31 downto 0) XOR sig0;
+					temp1 := round_key(63 downto 32) XOR temp0;
+			               temp2 := round_key(95 downto 64) XOR temp1;
+					temp3 := round_key(127 downto 96) XOR temp2;
+			         END CASE;	
 			  end if;
 			        	round_key(127 downto 96) <= temp3;
 				        round_key(95 downto 64) <= temp2;
